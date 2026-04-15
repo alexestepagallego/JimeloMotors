@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jimelo Motors - Taller y Vehículos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #ffc107; 
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #e0e0e0;
+        }
+
+        /* CONFIGURACIÓN DEL SCROLL MAGNÉTICO CORREGIDA */
+        html {
+            /* El scroll snap se aplica mejor al html directamente */
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            overflow-x: hidden; /* Evita scroll lateral accidental */
+        }
+
+        /* Cada "zona" de la web */
+        .snap-section {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            
+            /* Usamos min-height por si en algún móvil la pantalla es muy pequeña y el contenido necesita más espacio */
+            min-height: 100vh; 
+            width: 100%;
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        
+        /* Estilos del Hero */
+        .hero {
+            /* Pon la ruta de tu foto aquí: */
+    background-image: url('jimelo.png'); 
+    background-size: cover; /* Hace que la foto ocupe todo el espacio sin deformarse */
+    background-position: center; /* Centra la foto */
+        }
+
+        
+        
+        .hero-subtitle { 
+            color: #aaaaaa; 
+            font-size: 1.4rem; 
+            opacity: 0; 
+            font-weight: 300; 
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 0 0 50px 0;
+            font-size: 2.8rem;
+            color: #fff;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0; 
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 0; 
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: var(--bg-card);
+            padding: 40px;
+            border-radius: 8px;
+            border-left: 0px solid var(--primary); 
+            opacity: 0; 
+            transition: border-width 0.3s ease;
+        }
+
+        .service-icon { font-size: 3rem; color: var(--primary); margin-bottom: 20px; }
+        .service-card h3 { font-size: 1.6rem; margin: 0 0 15px 0; }
+        .service-card p { color: #bbbbbb; line-height: 1.6; margin: 0; }
+
+        .cars-grid { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        
+        .car-card { 
+            background-color: var(--bg-card); 
+            border-radius: 8px; 
+            overflow: hidden;
+            cursor: pointer; 
+            opacity: 0; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+        }
+        
+        .car-image {
+            height: 200px;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .car-info { padding: 25px; }
+        .car-info h3 { margin: 0 0 10px 0; color: #ffffff; font-size: 1.5rem; }
+        .car-tag {
+            display: inline-block;
+            background-color: #333;
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .car-info p { color: #aaaaaa; font-size: 1rem; margin: 0; line-height: 1.5; }
+        
+        .cta-section {
+            text-align: center;
+            margin-top: 50px;
+            opacity: 0;
+        }
+        
+        .btn-contact {
+            display: inline-block;
+            padding: 15px 40px;
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        /* MEDIA QUERIES (Móviles) */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; letter-spacing: 1px; }
+            .hero-subtitle { font-size: 1.1rem; }
+            .section-title { font-size: 2rem; margin: 0 0 30px 0; }
+            
+            .services-grid, .cars-grid {
+                grid-template-columns: 1fr;
+                gap: 15px; 
+            }
+            .service-card { padding: 20px; }
+            .car-image { height: 150px; }
+            .btn-contact { width: 80%; padding: 15px 20px; font-size: 0.9rem; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <section class="snap-section hero">
+     
+       
+    </section>
+
+    <section class="snap-section">
+        <div class="container">
+            <h2 class="section-title anim-title">Servicios de Taller 🔧</h2>
+            <div class="services-grid">
+                <div class="service-card anim-service">
+                    <div class="service-icon">⚙️</div>
+                    <h3>Mecánica General</h3>
+                    <p>Mantenimiento preventivo, revisiones, frenos y reparaciones de motor.</p>
+                </div>
+                <div class="service-card anim-service">
+                    <div class="service-icon">💻</div>
+                    <h3>Diagnosis Avanzada</h3>
+                    <p>Identificación precisa de averías con equipos de última generación.</p>
+                </div>
+                <div class="service-card anim-service">
+                    <div class="service-icon">⚡</div>
+                    <h3>Electromecánica</h3>
+                    <p>Reparación de sistemas eléctricos, baterías, alternadores y clima.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="snap-section">
+        <div class="container">
+            <h2 class="section-title anim-title">Vehículos Disponibles 🚗</h2>
+            <div class="cars-grid">
+                <div class="car-card anim-car">
+                    <div class="car-image">IMAGEN COCHE 1</div>
+                    <div class="car-info">
+                        <span class="car-tag">Ocasión</span>
+                        <h3>Berlina Executive</h3>
+                        <p>2021 | 45.000 km | Diésel. Elegancia y confort.</p>
+                    </div>
+                </div>
+                <div class="car-card anim-car">
+                    <div class="car-image">IMAGEN COCHE 2</div>
+                    <div class="car-info">
+                        <span class="car-tag">Km 0</span>
+                        <h3>Compacto Deportivo</h3>
+                        <p>2023 | 5.000 km | Gasolina. Potencia y agilidad.</p>
+                    </div>
+                </div>
+                <div class="car-card anim-car">
+                    <div class="car-image">IMAGEN COCHE 3</div>
+                    <div class="car-info">
+                        <span class="car-tag">Ocasión</span>
+                        <h3>SUV Familiar</h3>
+                        <p>2020 | 72.000 km | Híbrido. Espacio y eficiencia.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cta-section anim-cta">
+                <a href="#" class="btn-contact">Contactar con Jimelo Motors</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Animación Inicial Hero
+        anime.timeline({ easing: 'easeOutExpo' })
+            .add({ targets: '.hero-title', scale: [0.5, 1], opacity: [0, 1], duration: 1400, delay: 300 })
+            .add({ targets: '.hero-subtitle', translateY: [20, 0], opacity: [0, 1], duration: 1000 }, '-=800');
+
+        // ¡CORRECCIÓN AQUÍ! Volvemos a root: null (la ventana del navegador) y bajamos un pelín el threshold
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+
+        const createScrollObserver = (targets, animationConfig) => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        anime({ targets: entry.target, ...animationConfig });
+                    } else {
+                        // Reset cuando sale de la pantalla
+                        anime.set(entry.target, { translateY: 50, opacity: 0 });
+                    }
+                });
+            }, observerOptions);
+            document.querySelectorAll(targets).forEach(el => observer.observe(el));
+        };
+
+        const titleObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime.timeline({ easing: 'easeOutExpo' })
+                        .add({ targets: entry.target, translateY: [30, 0], opacity: [0, 1], duration: 1000 })
+                        .add({ targets: entry.target.querySelector('::after'), width: '100%', duration: 800 }, '-=600');
+                } else {
+                    anime.set(entry.target, { translateY: 30, opacity: 0 });
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.anim-title').forEach(el => titleObserver.observe(el));
+
+        createScrollObserver('.anim-service', { translateY: [50, 0], opacity: [0, 1], delay: anime.stagger(150), duration: 1200, easing: 'easeOutElastic(1, .7)' });
+        createScrollObserver('.anim-car', { translateY: [80, 0], opacity: [0, 1], delay: anime.stagger(200), duration: 1400, easing: 'easeOutBack' });
+        createScrollObserver('.anim-cta', { scale: [0.8, 1], opacity: [0, 1], duration: 1000, easing: 'easeOutBack' });
+
+        if (window.matchMedia("(hover: hover)").matches) {
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.addEventListener('mouseenter', () => anime({ targets: card, borderLeftWidth: '8px', duration: 300, easing: 'easeOutQuad' }));
+                card.addEventListener('mouseleave', () => anime({ targets: card, borderLeftWidth: '0px', duration: 300, easing: 'easeOutQuad' }));
+            });
+
+            document.querySelectorAll('.car-card').forEach(card => {
+                card.addEventListener('mouseenter', () => anime({ targets: card, translateY: -15, scale: 1.02, boxShadow: '0 20px 40px rgba(255,193,7,0.2)', duration: 400, easing: 'easeOutQuad' }));
+                card.addEventListener('mouseleave', () => anime({ targets: card, translateY: 0, scale: 1, boxShadow: '0 10px 30px rgba(0,0,0,0.5)', duration: 400, easing: 'easeOutQuad' }));
+            });
+        }
+    </script>
+</body>
+</html>
