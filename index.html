@@ -168,15 +168,40 @@
             border-radius: 4px;
         }
 
-        /* MEDIA QUERIES (Móviles) */
+   /* =========================================
+           MEDIA QUERIES (Móviles)
+           ========================================= */
         @media (max-width: 768px) {
+            
+            /* 1. APAGAMOS EL SCROLL IMANTADO */
+            html {
+                scroll-snap-type: none; /* Desactiva el imán */
+            }
+
+            /* 2. LIBERAMOS LA ALTURA DE LAS SECCIONES */
+            .snap-section {
+                scroll-snap-align: none; /* Quitamos el punto de anclaje */
+                min-height: auto; /* Ya no forzamos que ocupen toda la pantalla */
+                padding: 60px 20px; /* Damos aire por arriba y por abajo */
+            }
+
+            /* 3. ADAPTAMOS EL FONDO DEL HERO PARA MÓVIL */
+            .hero {
+                min-height: 100vh; /* El inicio sí queremos que ocupe la pantalla entera */
+                /* Pon aquí el nombre de la foto vertical que te acabo de generar: */
+                background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('fondo-movil.jpg');
+                background-size: cover;
+                background-position: center;
+            }
+
+            /* Ajustes de texto y estructura que ya teníamos */
             .hero-title { font-size: 2.5rem; letter-spacing: 1px; }
             .hero-subtitle { font-size: 1.1rem; }
             .section-title { font-size: 2rem; margin: 0 0 30px 0; }
             
             .services-grid, .cars-grid {
                 grid-template-columns: 1fr;
-                gap: 15px; 
+                gap: 20px; 
             }
             .service-card { padding: 20px; }
             .car-image { height: 150px; }
