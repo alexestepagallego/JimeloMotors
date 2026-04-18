@@ -3,22 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jimelo Motors - Taller y Vehículos</title>
+    <title>Jimelo Motors</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
     
     <style>
+        /* VARIABLES GLOBALES */
         :root {
             --primary: #ffc107; 
             --bg-dark: #121212;
             --bg-card: #1e1e1e;
             --text-main: #e0e0e0;
-        }
-
-        /* CONFIGURACIÓN DEL SCROLL MAGNÉTICO CORREGIDA */
-        html {
-            /* El scroll snap se aplica mejor al html directamente */
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
         }
 
         body {
@@ -27,18 +24,40 @@
             font-family: 'Montserrat', sans-serif; 
             background-color: var(--bg-dark); 
             color: var(--text-main); 
-            overflow-x: hidden; /* Evita scroll lateral accidental */
+            overflow-x: hidden; 
         }
 
-        /* Cada "zona" de la web */
+        /* =================================================================
+           1. EL INTERRUPTOR MÁGICO (Ocultar/Mostrar según dispositivo)
+           ================================================================= */
+        
+        /* Por defecto (en ordenadores), el móvil está oculto */
+        .mobile-view { display: none; }
+        .desktop-view { display: block; }
+        
+        /* Ajustes de scroll para el ordenador */
+        html.pc-scroll {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        /* Cuando la pantalla es pequeña (MÓVILES) */
+        @media (max-width: 768px) {
+            .desktop-view { display: none !important; } /* Apagamos PC */
+            .mobile-view { display: block !important; } /* Encendemos Móvil */
+            
+            /* Apagamos el imán para que el móvil haga scroll normal */
+            html.pc-scroll { scroll-snap-type: none; }
+        }
+
+        /* =================================================================
+           2. ESTILOS DEL ORDENADOR (Desktop)
+           ================================================================= */
         .snap-section {
             scroll-snap-align: start;
             scroll-snap-stop: always;
-            
-            /* Usamos min-height por si en algún móvil la pantalla es muy pequeña y el contenido necesita más espacio */
             min-height: 100vh; 
             width: 100%;
-            
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -47,253 +66,177 @@
             padding: 20px;
         }
         
-        /* Estilos del Hero */
-        .hero {
-            /* Pon la ruta de tu foto aquí: */
-    background-image: url('jimelo.png'); 
-    background-size: cover; /* Hace que la foto ocupe todo el espacio sin deformarse */
-    background-position: center; /* Centra la foto */
-        }
-
-        
-        
-        .hero-subtitle { 
-            color: #aaaaaa; 
-            font-size: 1.4rem; 
-            opacity: 0; 
-            font-weight: 300; 
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .section-title {
+        .hero-desktop {
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
             text-align: center;
-            margin: 0 0 50px 0;
-            font-size: 2.8rem;
-            color: #fff;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0; 
         }
+
+        .hero-title { font-size: 4.5rem; color: var(--primary); margin-bottom: 10px; opacity: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .hero-subtitle { color: #aaaaaa; font-size: 1.4rem; opacity: 0; font-weight: 300; }
         
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 0; 
-            height: 4px;
-            background-color: var(--primary);
-        }
+        .container-desk { width: 100%; max-width: 1200px; }
 
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
+        .section-title { text-align: center; margin: 0 0 50px 0; font-size: 2.8rem; color: #fff; position: relative; display: inline-block; left: 50%; transform: translateX(-50%); opacity: 0; }
+        .section-title::after { content: ''; position: absolute; bottom: -10px; left: 0; width: 0; height: 4px; background-color: var(--primary); }
 
-        .service-card {
-            background-color: var(--bg-card);
-            padding: 40px;
-            border-radius: 8px;
-            border-left: 0px solid var(--primary); 
-            opacity: 0; 
-            transition: border-width 0.3s ease;
-        }
-
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .service-card { background-color: var(--bg-card); padding: 40px; border-radius: 8px; opacity: 0; }
         .service-icon { font-size: 3rem; color: var(--primary); margin-bottom: 20px; }
         .service-card h3 { font-size: 1.6rem; margin: 0 0 15px 0; }
         .service-card p { color: #bbbbbb; line-height: 1.6; margin: 0; }
 
-        .cars-grid { 
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-        
-        .car-card { 
-            background-color: var(--bg-card); 
-            border-radius: 8px; 
-            overflow: hidden;
-            cursor: pointer; 
-            opacity: 0; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-        }
-        
-        .car-image {
-            height: 200px;
-            background-color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: #555;
-        }
-
+        .cars-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .car-card-desk { background-color: var(--bg-card); border-radius: 8px; overflow: hidden; cursor: pointer; opacity: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .car-image-desk { height: 200px; width: 100%; overflow: hidden; }
+        .car-image-desk img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
         .car-info { padding: 25px; }
         .car-info h3 { margin: 0 0 10px 0; color: #ffffff; font-size: 1.5rem; }
-        .car-tag {
-            display: inline-block;
-            background-color: #333;
-            color: var(--primary);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
+        .car-tag { display: inline-block; background-color: #333; color: var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 15px; text-transform: uppercase; }
         .car-info p { color: #aaaaaa; font-size: 1rem; margin: 0; line-height: 1.5; }
-        
-        .cta-section {
-            text-align: center;
-            margin-top: 50px;
-            opacity: 0;
-        }
-        
-        .btn-contact {
-            display: inline-block;
-            padding: 15px 40px;
-            background-color: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-decoration: none;
-            border-radius: 4px;
-        }
 
-   /* =========================================
-           MEDIA QUERIES (Móviles)
-           ========================================= */
-        @media (max-width: 768px) {
-            
-            /* 1. APAGAMOS EL SCROLL IMANTADO */
-            html {
-                scroll-snap-type: none; /* Desactiva el imán */
-            }
-
-            /* 2. LIBERAMOS LA ALTURA DE LAS SECCIONES */
-            .snap-section {
-                scroll-snap-align: none; /* Quitamos el punto de anclaje */
-                min-height: auto; /* Ya no forzamos que ocupen toda la pantalla */
-                padding: 60px 20px; /* Damos aire por arriba y por abajo */
-            }
-
-            /* 3. ADAPTAMOS EL FONDO DEL HERO PARA MÓVIL */
-            .hero {
-                min-height: 100vh; /* El inicio sí queremos que ocupe la pantalla entera */
-                /* Pon aquí el nombre de la foto vertical que te acabo de generar: */
-                background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('fondo-movil.jpg');
-                background-size: cover;
-                background-position: center;
-            }
-
-            /* Ajustes de texto y estructura que ya teníamos */
-            .hero-title { font-size: 2.5rem; letter-spacing: 1px; }
-            .hero-subtitle { font-size: 1.1rem; }
-            .section-title { font-size: 2rem; margin: 0 0 30px 0; }
-            
-            .services-grid, .cars-grid {
-                grid-template-columns: 1fr;
-                gap: 20px; 
-            }
-            .service-card { padding: 20px; }
-            .car-image { height: 150px; }
-            .btn-contact { width: 80%; padding: 15px 20px; font-size: 0.9rem; }
-        }
+        /* =================================================================
+           3. ESTILOS ESPECÍFICOS DEL MÓVIL
+           ================================================================= */
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    
+    <script>document.documentElement.classList.add('pc-scroll');</script>
 
-    <section class="snap-section hero">
-     
-       
-    </section>
+    <div class="desktop-view">
+        
+        <section class="snap-section hero-desktop">
+            <h1 class="hero-title">Jimelo Motors</h1>
+            <p class="hero-subtitle">Tu Taller de Confianza y Concesionario Multimarca</p>
+        </section>
 
-    <section class="snap-section">
-        <div class="container">
-            <h2 class="section-title anim-title">Servicios de Taller 🔧</h2>
-            <div class="services-grid">
-                <div class="service-card anim-service">
-                    <div class="service-icon">⚙️</div>
-                    <h3>Mecánica General</h3>
-                    <p>Mantenimiento preventivo, revisiones, frenos y reparaciones de motor.</p>
+        <section class="snap-section">
+            <div class="container-desk">
+                <h2 class="section-title anim-title">Servicios de Taller 🔧</h2>
+                <div class="services-grid">
+                    <div class="service-card anim-service">
+                        <div class="service-icon">⚙️</div>
+                        <h3>Mecánica General</h3>
+                        <p>Mantenimiento preventivo, revisiones, frenos y reparaciones de motor.</p>
+                    </div>
+                    <div class="service-card anim-service">
+                        <div class="service-icon">💻</div>
+                        <h3>Diagnosis Avanzada</h3>
+                        <p>Identificación precisa de averías con equipos de última generación.</p>
+                    </div>
+                    <div class="service-card anim-service">
+                        <div class="service-icon">⚡</div>
+                        <h3>Electromecánica</h3>
+                        <p>Reparación de sistemas eléctricos, baterías, alternadores y clima.</p>
+                    </div>
                 </div>
-                <div class="service-card anim-service">
-                    <div class="service-icon">💻</div>
-                    <h3>Diagnosis Avanzada</h3>
-                    <p>Identificación precisa de averías con equipos de última generación.</p>
+            </div>
+        </section>
+
+        <section class="snap-section">
+            <div class="container-desk">
+                <h2 class="section-title anim-title">Vehículos Disponibles 🚗</h2>
+                <div class="cars-grid">
+                    <div class="car-card-desk anim-car">
+                        <div class="car-image-desk"><img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80" alt="Berlina"></div>
+                        <div class="car-info">
+                            <span class="car-tag">Ocasión</span>
+                            <h3>Berlina Executive</h3>
+                            <p>2021 | 45.000 km | Diésel.</p>
+                        </div>
+                    </div>
+                    <div class="car-card-desk anim-car">
+                        <div class="car-image-desk"><img src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80" alt="Compacto"></div>
+                        <div class="car-info">
+                            <span class="car-tag">Km 0</span>
+                            <h3>Compacto Deportivo</h3>
+                            <p>2023 | 5.000 km | Gasolina.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="service-card anim-service">
-                    <div class="service-icon">⚡</div>
-                    <h3>Electromecánica</h3>
-                    <p>Reparación de sistemas eléctricos, baterías, alternadores y clima.</p>
+            </div>
+        </section>
+    </div>
+
+    <div class="mobile-view">
+        <header class="bg-[#1a1a1a] text-white h-20 sticky top-0 z-50 flex justify-center items-center shadow-2xl border-b border-[#ffc107] relative">
+            <button id="btn-atras" onclick="goBack()" class="hidden absolute left-4 text-xs bg-white/10 px-3 py-2 rounded-full border border-[#ffc107] text-[#ffc107] font-bold z-10 uppercase tracking-wider">
+                ← Volver
+            </button>
+            <div id="header-title" class="absolute left-1/2 -translate-x-1/2 flex justify-center items-center font-black text-2xl tracking-widest text-[#ffc107] uppercase italic">
+                JIMELO MOTOR
+            </div>
+        </header>
+
+        <main class="max-w-md mx-auto p-4">
+            <div id="vista-principal" class="fade-in space-y-5 pb-20">
+                <h2 class="text-center text-xl font-bold uppercase tracking-widest my-6 text-gray-400">¿Qué buscas hoy?</h2>
+                <div id="contenedor-principal" class="space-y-5"></div>
+            </div>
+
+            <div id="vista-subcategorias" class="hidden fade-in space-y-5 pb-20">
+                <h2 class="text-center text-xl font-bold uppercase tracking-widest my-6 text-gray-400">Servicios de Taller</h2>
+                <div id="contenedor-subcategorias" class="space-y-5"></div>
+            </div>
+
+            <div id="vista-lista" class="hidden fade-in pb-20">
+                <h3 id="titulo-lista" class="text-2xl font-bold mb-6 flex items-center uppercase tracking-widest text-white">
+                    <span class="w-10 h-1 bg-[#ffc107] mr-3 rounded-full"></span>TÍTULO
+                </h3>
+                <div id="grid-items" class="grid grid-cols-1 gap-6"></div>
+            </div>
+        </main>
+
+        <div id="item-detail" class="fixed inset-0 z-[60] transform translate-y-full transition-transform duration-500 ease-in-out overflow-y-auto bg-[#121212]">
+            <button onclick="closeDetail()" class="absolute top-6 right-6 bg-[#1a1a1a] text-[#ffc107] w-12 h-12 rounded-full shadow-2xl z-10 font-bold border border-[#ffc107] flex items-center justify-center text-xl active:scale-90 transition-transform">✕</button>
+
+            <div class="flex flex-col min-h-screen">
+                <div class="relative h-64 w-full">
+                    <img id="detail-img" src="" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent"></div>
+                    <div class="absolute bottom-4 right-4 bg-[#ffc107] text-black px-4 py-2 rounded-lg font-black text-xl shadow-lg">
+                        <span id="detail-price"></span>
+                    </div>
+                </div>
+
+                <div class="p-6 relative -mt-6 bg-[#1a1a1a] rounded-t-3xl flex-grow border-t-2 border-[#ffc107] shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+                    <h2 id="detail-title" class="text-3xl font-black text-white mb-6 uppercase leading-tight mt-4"></h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-xs uppercase tracking-[0.2em] text-[#ffc107] font-bold mb-2">Descripción</h4>
+                            <p id="detail-desc" class="text-gray-300 text-sm leading-relaxed"></p>
+                        </div>
+                        <div class="pt-4 border-t border-gray-800">
+                            <h4 class="text-xs uppercase tracking-[0.2em] text-[#ffc107] font-bold mb-3">Características</h4>
+                            <div id="detail-tags" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                    <button onclick="closeDetail()" class="mt-10 w-full bg-transparent text-[#ffc107] py-4 rounded-xl font-bold border-2 border-[#ffc107] active:scale-95 transition-transform uppercase tracking-wider text-sm">
+                        Volver a la lista
+                    </button>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section class="snap-section">
-        <div class="container">
-            <h2 class="section-title anim-title">Vehículos Disponibles 🚗</h2>
-            <div class="cars-grid">
-                <div class="car-card anim-car">
-                    <div class="car-image">IMAGEN COCHE 1</div>
-                    <div class="car-info">
-                        <span class="car-tag">Ocasión</span>
-                        <h3>Berlina Executive</h3>
-                        <p>2021 | 45.000 km | Diésel. Elegancia y confort.</p>
-                    </div>
-                </div>
-                <div class="car-card anim-car">
-                    <div class="car-image">IMAGEN COCHE 2</div>
-                    <div class="car-info">
-                        <span class="car-tag">Km 0</span>
-                        <h3>Compacto Deportivo</h3>
-                        <p>2023 | 5.000 km | Gasolina. Potencia y agilidad.</p>
-                    </div>
-                </div>
-                <div class="car-card anim-car">
-                    <div class="car-image">IMAGEN COCHE 3</div>
-                    <div class="car-info">
-                        <span class="car-tag">Ocasión</span>
-                        <h3>SUV Familiar</h3>
-                        <p>2020 | 72.000 km | Híbrido. Espacio y eficiencia.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="cta-section anim-cta">
-                <a href="#" class="btn-contact">Contactar con Jimelo Motors</a>
-            </div>
-        </div>
-    </section>
+    </div>
 
     <script>
-        // Animación Inicial Hero
+        /* ================= SCRIPTS ORDENADOR ================= */
+        // Animación Inicial
         anime.timeline({ easing: 'easeOutExpo' })
             .add({ targets: '.hero-title', scale: [0.5, 1], opacity: [0, 1], duration: 1400, delay: 300 })
             .add({ targets: '.hero-subtitle', translateY: [20, 0], opacity: [0, 1], duration: 1000 }, '-=800');
 
-        // ¡CORRECCIÓN AQUÍ! Volvemos a root: null (la ventana del navegador) y bajamos un pelín el threshold
+        // Scroll Observer
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-
         const createScrollObserver = (targets, animationConfig) => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        anime({ targets: entry.target, ...animationConfig });
-                    } else {
-                        // Reset cuando sale de la pantalla
-                        anime.set(entry.target, { translateY: 50, opacity: 0 });
-                    }
+                    if (entry.isIntersecting) anime({ targets: entry.target, ...animationConfig });
+                    else anime.set(entry.target, { translateY: 50, opacity: 0 });
                 });
             }, observerOptions);
             document.querySelectorAll(targets).forEach(el => observer.observe(el));
@@ -305,28 +248,127 @@
                     anime.timeline({ easing: 'easeOutExpo' })
                         .add({ targets: entry.target, translateY: [30, 0], opacity: [0, 1], duration: 1000 })
                         .add({ targets: entry.target.querySelector('::after'), width: '100%', duration: 800 }, '-=600');
-                } else {
-                    anime.set(entry.target, { translateY: 30, opacity: 0 });
-                }
+                } else anime.set(entry.target, { translateY: 30, opacity: 0 });
             });
         }, observerOptions);
+        
         document.querySelectorAll('.anim-title').forEach(el => titleObserver.observe(el));
-
         createScrollObserver('.anim-service', { translateY: [50, 0], opacity: [0, 1], delay: anime.stagger(150), duration: 1200, easing: 'easeOutElastic(1, .7)' });
         createScrollObserver('.anim-car', { translateY: [80, 0], opacity: [0, 1], delay: anime.stagger(200), duration: 1400, easing: 'easeOutBack' });
-        createScrollObserver('.anim-cta', { scale: [0.8, 1], opacity: [0, 1], duration: 1000, easing: 'easeOutBack' });
 
+        // Hover Ordenador
         if (window.matchMedia("(hover: hover)").matches) {
-            document.querySelectorAll('.service-card').forEach(card => {
-                card.addEventListener('mouseenter', () => anime({ targets: card, borderLeftWidth: '8px', duration: 300, easing: 'easeOutQuad' }));
-                card.addEventListener('mouseleave', () => anime({ targets: card, borderLeftWidth: '0px', duration: 300, easing: 'easeOutQuad' }));
-            });
-
-            document.querySelectorAll('.car-card').forEach(card => {
+            document.querySelectorAll('.car-card-desk').forEach(card => {
                 card.addEventListener('mouseenter', () => anime({ targets: card, translateY: -15, scale: 1.02, boxShadow: '0 20px 40px rgba(255,193,7,0.2)', duration: 400, easing: 'easeOutQuad' }));
                 card.addEventListener('mouseleave', () => anime({ targets: card, translateY: 0, scale: 1, boxShadow: '0 10px 30px rgba(0,0,0,0.5)', duration: 400, easing: 'easeOutQuad' }));
             });
         }
+
+        /* ================= SCRIPTS MÓVIL APP ================= */
+        const menuPrincipal = [
+            { id: 'TALLER', nombre: 'Servicios de Taller', foto: 'https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=800&q=80' },
+            { id: 'VEHICULOS', nombre: 'Vehículos Disponibles', foto: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80' }
+        ];
+
+        const subcategoriasTaller = [
+            { id: 'MECANICA', nombre: 'Mecánica General', foto: 'https://images.unsplash.com/photo-1632823465306-ed411d7f6b92?auto=format&fit=crop&w=800&q=80' },
+            { id: 'DIAGNOSIS', nombre: 'Diagnosis Avanzada', foto: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80' },
+            { id: 'ELECTRO', nombre: 'Electromecánica', foto: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=800&q=80' }
+        ];
+
+        const itemsBD = [
+            { id: 1, categoria: 'VEHICULOS', nombre: 'Berlina Executive', precio: '24.900 €', foto: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80', descripcion: 'Vehículo en perfecto estado.', tags: ['Diésel', '45.000 km', 'Automático'] },
+            { id: 2, categoria: 'VEHICULOS', nombre: 'Compacto Deportivo', precio: '18.500 €', foto: 'https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80', descripcion: 'Etiqueta ECO.', tags: ['Gasolina', 'Híbrido', 'Manual'] },
+            { id: 3, categoria: 'MECANICA', nombre: 'Revisión Mantenimiento', precio: 'Desde 80 €', foto: 'https://images.unsplash.com/photo-1632823465306-ed411d7f6b92?auto=format&fit=crop&w=800&q=80', descripcion: 'Cambio de aceite y filtros.', tags: ['Express', 'Premium'] }
+        ];
+
+        let historialVistas = ['principal'];
+
+        function renderizarTarjetasGrandes(datos, contenedorId) {
+            document.getElementById(contenedorId).innerHTML = datos.map(item => `
+                <div onclick="manejarClicNavegacion('${item.id}')" class="relative h-40 rounded-2xl overflow-hidden shadow-xl active:scale-95 transition-transform cursor-pointer border border-gray-800">
+                    <img src="${item.foto}" loading="lazy" class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4">
+                        <span class="text-white text-2xl font-black uppercase tracking-wider">${item.nombre}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function manejarClicNavegacion(idClic) {
+            if (idClic === 'TALLER') cambiarVista('subcategorias');
+            else {
+                renderizarListaItems(idClic);
+                cambiarVista('lista', idClic);
+            }
+        }
+
+        function renderizarListaItems(categoriaId) {
+            const filtrados = itemsBD.filter(item => item.categoria === categoriaId);
+            const grid = document.getElementById('grid-items');
+            
+            let titulo = categoriaId;
+            if(categoriaId === 'VEHICULOS') titulo = 'Vehículos Disponibles';
+            if(categoriaId === 'MECANICA') titulo = 'Mecánica General';
+            document.getElementById('titulo-lista').innerText = titulo;
+            
+            if (filtrados.length === 0) grid.innerHTML = '<p class="text-center text-gray-500 py-10 italic">Próximamente disponible</p>';
+            else {
+                grid.innerHTML = filtrados.map(item => `
+                    <div onclick="openDetail(${item.id})" class="bg-[#1a1a1a] rounded-2xl shadow-lg overflow-hidden active:scale-95 transition-transform border border-gray-800 flex flex-col">
+                        <img src="${item.foto}" loading="lazy" class="w-full h-48 object-cover">
+                        <div class="p-5 flex justify-between items-center">
+                            <div><h4 class="font-bold text-lg leading-tight uppercase">${item.nombre}</h4></div>
+                            <div class="bg-[#2a2a2a] px-3 py-2 rounded-lg border border-[#ffc107]/30"><p class="text-[#ffc107] font-bold">${item.precio}</p></div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function cambiarVista(nuevaVista) {
+            document.getElementById('vista-principal').classList.add('hidden');
+            document.getElementById('vista-subcategorias').classList.add('hidden');
+            document.getElementById('vista-lista').classList.add('hidden');
+            document.getElementById(`vista-${nuevaVista}`).classList.remove('hidden');
+            
+            if(nuevaVista !== 'principal') document.getElementById('btn-atras').classList.remove('hidden');
+            else document.getElementById('btn-atras').classList.add('hidden');
+
+            historialVistas.push(nuevaVista);
+            window.scrollTo(0, 0);
+        }
+
+        function goBack() {
+            historialVistas.pop(); 
+            const vistaAnterior = historialVistas.pop(); 
+            if(!vistaAnterior || vistaAnterior === 'principal') {
+                historialVistas = ['principal'];
+                cambiarVista('principal');
+            } else cambiarVista(vistaAnterior);
+        }
+
+        function openDetail(id) {
+            const item = itemsBD.find(x => x.id === id);
+            document.getElementById('detail-img').src = item.foto;
+            document.getElementById('detail-title').innerText = item.nombre;
+            document.getElementById('detail-price').innerText = item.precio;
+            document.getElementById('detail-desc').innerText = item.descripcion;
+            document.getElementById('detail-tags').innerHTML = item.tags.map(tag => `<span class="bg-[#2a2a2a] text-gray-300 px-3 py-1.5 rounded-md text-xs font-semibold border border-gray-700 uppercase tracking-wide">${tag}</span>`).join('');
+            document.getElementById('item-detail').classList.remove('translate-y-full');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeDetail() {
+            document.getElementById('item-detail').classList.add('translate-y-full');
+            document.body.style.overflow = 'auto'; 
+        }
+
+        // Arrancar la app móvil
+        renderizarTarjetasGrandes(menuPrincipal, 'contenedor-principal');
+        renderizarTarjetasGrandes(subcategoriasTaller, 'contenedor-subcategorias');
+
     </script>
 </body>
 </html>
