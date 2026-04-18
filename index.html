@@ -27,32 +27,22 @@
             overflow-x: hidden; 
         }
 
-        /* =================================================================
-           1. EL INTERRUPTOR MÁGICO (Ocultar/Mostrar según dispositivo)
-           ================================================================= */
-        
-        /* Por defecto (en ordenadores), el móvil está oculto */
+        /* 1. EL INTERRUPTOR MÁGICO (Ocultar/Mostrar según dispositivo) */
         .mobile-view { display: none; }
         .desktop-view { display: block; }
         
-        /* Ajustes de scroll para el ordenador */
         html.pc-scroll {
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
         }
 
-        /* Cuando la pantalla es pequeña (MÓVILES) */
         @media (max-width: 768px) {
-            .desktop-view { display: none !important; } /* Apagamos PC */
-            .mobile-view { display: block !important; } /* Encendemos Móvil */
-            
-            /* Apagamos el imán para que el móvil haga scroll normal */
+            .desktop-view { display: none !important; } 
+            .mobile-view { display: block !important; } 
             html.pc-scroll { scroll-snap-type: none; }
         }
 
-        /* =================================================================
-           2. ESTILOS DEL ORDENADOR (Desktop)
-           ================================================================= */
+        /* 2. ESTILOS DEL ORDENADOR (Desktop) */
         .snap-section {
             scroll-snap-align: start;
             scroll-snap-stop: always;
@@ -96,9 +86,7 @@
         .car-tag { display: inline-block; background-color: #333; color: var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 15px; text-transform: uppercase; }
         .car-info p { color: #aaaaaa; font-size: 1rem; margin: 0; line-height: 1.5; }
 
-        /* =================================================================
-           3. ESTILOS ESPECÍFICOS DEL MÓVIL
-           ================================================================= */
+        /* 3. ESTILOS ESPECÍFICOS DEL MÓVIL */
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -108,7 +96,6 @@
     <script>document.documentElement.classList.add('pc-scroll');</script>
 
     <div class="desktop-view">
-        
         <section class="snap-section hero-desktop">
             <h1 class="hero-title">Jimelo Motors</h1>
             <p class="hero-subtitle">Tu Taller de Confianza y Concesionario Multimarca</p>
@@ -163,12 +150,13 @@
     </div>
 
     <div class="mobile-view">
-        <header class="bg-[#1a1a1a] text-white h-20 sticky top-0 z-50 flex justify-center items-center shadow-2xl border-b border-[#ffc107] relative">
+        <header class="bg-[#1a1a1a] h-20 sticky top-0 z-50 flex justify-center items-center shadow-2xl border-b border-[#ffc107] relative">
             <button id="btn-atras" onclick="goBack()" class="hidden absolute left-4 text-xs bg-white/10 px-3 py-2 rounded-full border border-[#ffc107] text-[#ffc107] font-bold z-10 uppercase tracking-wider">
                 ← Volver
             </button>
-            <div id="header-title" class="absolute inset-0 flex justify-center items-center py-3 pointer-events-none">
-                <img src="ruta/a/tu/logo-rectangular.png" class="h-full object-contain" alt="Logo">
+            
+            <div id="header-logo-container" class="absolute inset-0 flex justify-center items-center py-2 pointer-events-none">
+                <img src="logo.png" alt="Jimelo Motors" class="h-full object-contain">
             </div>
         </header>
 
@@ -225,12 +213,10 @@
 
     <script>
         /* ================= SCRIPTS ORDENADOR ================= */
-        // Animación Inicial
         anime.timeline({ easing: 'easeOutExpo' })
             .add({ targets: '.hero-title', scale: [0.5, 1], opacity: [0, 1], duration: 1400, delay: 300 })
             .add({ targets: '.hero-subtitle', translateY: [20, 0], opacity: [0, 1], duration: 1000 }, '-=800');
 
-        // Scroll Observer
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const createScrollObserver = (targets, animationConfig) => {
             const observer = new IntersectionObserver((entries) => {
@@ -256,7 +242,6 @@
         createScrollObserver('.anim-service', { translateY: [50, 0], opacity: [0, 1], delay: anime.stagger(150), duration: 1200, easing: 'easeOutElastic(1, .7)' });
         createScrollObserver('.anim-car', { translateY: [80, 0], opacity: [0, 1], delay: anime.stagger(200), duration: 1400, easing: 'easeOutBack' });
 
-        // Hover Ordenador
         if (window.matchMedia("(hover: hover)").matches) {
             document.querySelectorAll('.car-card-desk').forEach(card => {
                 card.addEventListener('mouseenter', () => anime({ targets: card, translateY: -15, scale: 1.02, boxShadow: '0 20px 40px rgba(255,193,7,0.2)', duration: 400, easing: 'easeOutQuad' }));
@@ -264,7 +249,7 @@
             });
         }
 
-        /* ================= SCRIPTS MÓVIL APP ================= */
+        /* ================= SCRIPTS MÓVIL APP + HISTORIAL ================= */
         const menuPrincipal = [
             { id: 'TALLER', nombre: 'Servicios de Taller', foto: 'https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=800&q=80' },
             { id: 'VEHICULOS', nombre: 'Vehículos Disponibles', foto: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80' }
@@ -283,6 +268,9 @@
         ];
 
         let historialVistas = ['principal'];
+        
+        // Registrar el estado inicial en el historial del navegador
+        history.replaceState({ view: 'principal' }, "");
 
         function renderizarTarjetasGrandes(datos, contenedorId) {
             document.getElementById(contenedorId).innerHTML = datos.map(item => `
@@ -300,7 +288,7 @@
             if (idClic === 'TALLER') cambiarVista('subcategorias');
             else {
                 renderizarListaItems(idClic);
-                cambiarVista('lista', idClic);
+                cambiarVista('lista', true, idClic);
             }
         }
 
@@ -327,7 +315,8 @@
             }
         }
 
-        function cambiarVista(nuevaVista, guardarHistorial = true) {
+        // El parámetro pushHistory controla si inyectamos una entrada nueva en el navegador
+        function cambiarVista(nuevaVista, pushHistory = true, infoExtra = null) {
             document.getElementById('vista-principal').classList.add('hidden');
             document.getElementById('vista-subcategorias').classList.add('hidden');
             document.getElementById('vista-lista').classList.add('hidden');
@@ -336,15 +325,16 @@
             if(nuevaVista !== 'principal') document.getElementById('btn-atras').classList.remove('hidden');
             else document.getElementById('btn-atras').classList.add('hidden');
 
-            if (guardarHistorial) {
+            if(pushHistory) {
                 historialVistas.push(nuevaVista);
-                history.pushState({ view: nuevaVista }, "");
+                history.pushState({ view: nuevaVista, info: infoExtra }, "");
             }
             window.scrollTo(0, 0);
         }
 
+        // El botón "Volver" de la pantalla simplemente simula el botón "Atrás" del móvil
         function goBack() {
-            history.back();
+            history.back(); 
         }
 
         function openDetail(id) {
@@ -356,26 +346,36 @@
             document.getElementById('detail-tags').innerHTML = item.tags.map(tag => `<span class="bg-[#2a2a2a] text-gray-300 px-3 py-1.5 rounded-md text-xs font-semibold border border-gray-700 uppercase tracking-wide">${tag}</span>`).join('');
             document.getElementById('item-detail').classList.remove('translate-y-full');
             document.body.style.overflow = 'hidden'; 
-            history.pushState({ view: 'detalle', id: id }, "");
+            
+            // Registramos que abrimos un detalle
+            history.pushState({ view: 'detalle' }, "");
         }
 
+        // El botón "X" o "Cerrar" simula el botón atrás para no romper el historial
         function closeDetail() {
-            document.getElementById('item-detail').classList.add('translate-y-full');
-            document.body.style.overflow = 'auto'; 
+            history.back();
         }
 
+        // ==========================================
+        // LA MAGIA: Interceptar el botón Atrás
+        // ==========================================
         window.onpopstate = function(event) {
-            const detailModal = document.getElementById('item-detail');
-            if (!detailModal.classList.contains('translate-y-full')) {
-                closeDetail();
+            const detalleAbierto = !document.getElementById('item-detail').classList.contains('translate-y-full');
+            const state = event.state;
+
+            // Si el modal gigante del coche estaba abierto, solo lo cerramos visualmente
+            if (detalleAbierto) {
+                document.getElementById('item-detail').classList.add('translate-y-full');
+                document.body.style.overflow = 'auto';
             } else {
-                historialVistas.pop(); 
-                const vistaAnterior = event.state && event.state.view ? event.state.view : historialVistas[historialVistas.length - 1];
-                if (!vistaAnterior || vistaAnterior === 'principal' || vistaAnterior === 'detalle') {
+                // Si no había modal, navegamos a la vista anterior
+                if (state && state.view) {
+                    historialVistas.pop();
+                    cambiarVista(state.view, false);
+                } else {
+                    // Por si acaso se corrompe, vuelta al inicio
                     historialVistas = ['principal'];
                     cambiarVista('principal', false);
-                } else {
-                    cambiarVista(vistaAnterior, false);
                 }
             }
         };
