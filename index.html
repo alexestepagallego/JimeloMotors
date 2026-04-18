@@ -167,8 +167,8 @@
             <button id="btn-atras" onclick="goBack()" class="hidden absolute left-4 text-xs bg-white/10 px-3 py-2 rounded-full border border-[#ffc107] text-[#ffc107] font-bold z-10 uppercase tracking-wider">
                 ← Volver
             </button>
-            <div id="header-title" class="absolute left-1/2 -translate-x-1/2 flex justify-center items-center font-black text-2xl tracking-widest text-[#ffc107] uppercase italic">
-                JIMELO MOTOR
+            <div id="header-title" class="absolute inset-0 flex justify-center items-center py-3 pointer-events-none">
+                <img src="ruta/a/tu/logo-rectangular.png" class="h-full object-contain" alt="Logo">
             </div>
         </header>
 
@@ -327,7 +327,7 @@
             }
         }
 
-        function cambiarVista(nuevaVista) {
+        function cambiarVista(nuevaVista, guardarHistorial = true) {
             document.getElementById('vista-principal').classList.add('hidden');
             document.getElementById('vista-subcategorias').classList.add('hidden');
             document.getElementById('vista-lista').classList.add('hidden');
@@ -336,17 +336,15 @@
             if(nuevaVista !== 'principal') document.getElementById('btn-atras').classList.remove('hidden');
             else document.getElementById('btn-atras').classList.add('hidden');
 
-            historialVistas.push(nuevaVista);
+            if (guardarHistorial) {
+                historialVistas.push(nuevaVista);
+                history.pushState({ view: nuevaVista }, "");
+            }
             window.scrollTo(0, 0);
         }
 
         function goBack() {
-            historialVistas.pop(); 
-            const vistaAnterior = historialVistas.pop(); 
-            if(!vistaAnterior || vistaAnterior === 'principal') {
-                historialVistas = ['principal'];
-                cambiarVista('principal');
-            } else cambiarVista(vistaAnterior);
+            history.back();
         }
 
         function openDetail(id) {
@@ -358,12 +356,29 @@
             document.getElementById('detail-tags').innerHTML = item.tags.map(tag => `<span class="bg-[#2a2a2a] text-gray-300 px-3 py-1.5 rounded-md text-xs font-semibold border border-gray-700 uppercase tracking-wide">${tag}</span>`).join('');
             document.getElementById('item-detail').classList.remove('translate-y-full');
             document.body.style.overflow = 'hidden'; 
+            history.pushState({ view: 'detalle', id: id }, "");
         }
 
         function closeDetail() {
             document.getElementById('item-detail').classList.add('translate-y-full');
             document.body.style.overflow = 'auto'; 
         }
+
+        window.onpopstate = function(event) {
+            const detailModal = document.getElementById('item-detail');
+            if (!detailModal.classList.contains('translate-y-full')) {
+                closeDetail();
+            } else {
+                historialVistas.pop(); 
+                const vistaAnterior = event.state && event.state.view ? event.state.view : historialVistas[historialVistas.length - 1];
+                if (!vistaAnterior || vistaAnterior === 'principal' || vistaAnterior === 'detalle') {
+                    historialVistas = ['principal'];
+                    cambiarVista('principal', false);
+                } else {
+                    cambiarVista(vistaAnterior, false);
+                }
+            }
+        };
 
         // Arrancar la app móvil
         renderizarTarjetasGrandes(menuPrincipal, 'contenedor-principal');
