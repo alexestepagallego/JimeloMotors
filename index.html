@@ -27,32 +27,22 @@
             overflow-x: hidden; 
         }
 
-        /* =================================================================
-           1. EL INTERRUPTOR MÁGICO (Ocultar/Mostrar según dispositivo)
-           ================================================================= */
-        
-        /* Por defecto (en ordenadores), el móvil está oculto */
+        /* 1. EL INTERRUPTOR MÁGICO (Ocultar/Mostrar según dispositivo) */
         .mobile-view { display: none; }
         .desktop-view { display: block; }
         
-        /* Ajustes de scroll para el ordenador */
         html.pc-scroll {
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
         }
 
-        /* Cuando la pantalla es pequeña (MÓVILES) */
         @media (max-width: 768px) {
-            .desktop-view { display: none !important; } /* Apagamos PC */
-            .mobile-view { display: block !important; } /* Encendemos Móvil */
-            
-            /* Apagamos el imán para que el móvil haga scroll normal */
+            .desktop-view { display: none !important; } 
+            .mobile-view { display: block !important; } 
             html.pc-scroll { scroll-snap-type: none; }
         }
 
-        /* =================================================================
-           2. ESTILOS DEL ORDENADOR (Desktop)
-           ================================================================= */
+        /* 2. ESTILOS DEL ORDENADOR (Desktop) */
         .snap-section {
             scroll-snap-align: start;
             scroll-snap-stop: always;
@@ -66,15 +56,16 @@
             padding: 20px;
         }
         
+        /* AQUI ARREGLAMOS LA PORTADA DEL ORDENADOR */
         .hero-desktop {
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
+            /* He quitado el degradado oscuro y el enlace del BMW. 
+               SOLO TIENES QUE CAMBIAR 'portada.jpg' POR EL NOMBRE DE TU IMAGEN */
+            background-image: url('jimelo.png'); 
+            background-size: cover; /* Cambia a 'contain' si ves que la foto se recorta por los lados */
             background-position: center;
-            text-align: center;
+            background-repeat: no-repeat;
+            background-color: var(--bg-dark); /* Fondo oscuro por si la foto no llena todo */
         }
-
-        .hero-title { font-size: 4.5rem; color: var(--primary); margin-bottom: 10px; opacity: 0; text-transform: uppercase; letter-spacing: 2px; }
-        .hero-subtitle { color: #aaaaaa; font-size: 1.4rem; opacity: 0; font-weight: 300; }
         
         .container-desk { width: 100%; max-width: 1200px; }
 
@@ -96,9 +87,7 @@
         .car-tag { display: inline-block; background-color: #333; color: var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 15px; text-transform: uppercase; }
         .car-info p { color: #aaaaaa; font-size: 1rem; margin: 0; line-height: 1.5; }
 
-        /* =================================================================
-           3. ESTILOS ESPECÍFICOS DEL MÓVIL
-           ================================================================= */
+        /* 3. ESTILOS ESPECÍFICOS DEL MÓVIL */
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -110,8 +99,6 @@
     <div class="desktop-view">
         
         <section class="snap-section hero-desktop">
-            <h1 class="hero-title">Jimelo Motors</h1>
-            <p class="hero-subtitle">Tu Taller de Confianza y Concesionario Multimarca</p>
         </section>
 
         <section class="snap-section">
@@ -163,12 +150,13 @@
     </div>
 
     <div class="mobile-view">
-        <header class="bg-[#1a1a1a] text-white h-20 sticky top-0 z-50 flex justify-center items-center shadow-2xl border-b border-[#ffc107] relative">
+        <header class="bg-[#1a1a1a] h-20 sticky top-0 z-50 flex justify-center items-center shadow-2xl border-b border-[#ffc107] relative">
             <button id="btn-atras" onclick="goBack()" class="hidden absolute left-4 text-xs bg-white/10 px-3 py-2 rounded-full border border-[#ffc107] text-[#ffc107] font-bold z-10 uppercase tracking-wider">
                 ← Volver
             </button>
-            <div id="header-title" class="absolute left-1/2 -translate-x-1/2 flex justify-center items-center font-black text-2xl tracking-widest text-[#ffc107] uppercase italic">
-                JIMELO MOTOR
+            
+            <div id="header-logo-container" class="absolute inset-0 flex justify-center items-center py-2 pointer-events-none">
+                <img src="logo.png" alt="Jimelo Motors" class="h-full object-contain">
             </div>
         </header>
 
@@ -225,12 +213,6 @@
 
     <script>
         /* ================= SCRIPTS ORDENADOR ================= */
-        // Animación Inicial
-        anime.timeline({ easing: 'easeOutExpo' })
-            .add({ targets: '.hero-title', scale: [0.5, 1], opacity: [0, 1], duration: 1400, delay: 300 })
-            .add({ targets: '.hero-subtitle', translateY: [20, 0], opacity: [0, 1], duration: 1000 }, '-=800');
-
-        // Scroll Observer
         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const createScrollObserver = (targets, animationConfig) => {
             const observer = new IntersectionObserver((entries) => {
@@ -256,7 +238,6 @@
         createScrollObserver('.anim-service', { translateY: [50, 0], opacity: [0, 1], delay: anime.stagger(150), duration: 1200, easing: 'easeOutElastic(1, .7)' });
         createScrollObserver('.anim-car', { translateY: [80, 0], opacity: [0, 1], delay: anime.stagger(200), duration: 1400, easing: 'easeOutBack' });
 
-        // Hover Ordenador
         if (window.matchMedia("(hover: hover)").matches) {
             document.querySelectorAll('.car-card-desk').forEach(card => {
                 card.addEventListener('mouseenter', () => anime({ targets: card, translateY: -15, scale: 1.02, boxShadow: '0 20px 40px rgba(255,193,7,0.2)', duration: 400, easing: 'easeOutQuad' }));
@@ -264,7 +245,7 @@
             });
         }
 
-        /* ================= SCRIPTS MÓVIL APP ================= */
+        /* ================= SCRIPTS MÓVIL APP + HISTORIAL ================= */
         const menuPrincipal = [
             { id: 'TALLER', nombre: 'Servicios de Taller', foto: 'https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&w=800&q=80' },
             { id: 'VEHICULOS', nombre: 'Vehículos Disponibles', foto: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80' }
@@ -283,6 +264,7 @@
         ];
 
         let historialVistas = ['principal'];
+        history.replaceState({ view: 'principal' }, "");
 
         function renderizarTarjetasGrandes(datos, contenedorId) {
             document.getElementById(contenedorId).innerHTML = datos.map(item => `
@@ -300,7 +282,7 @@
             if (idClic === 'TALLER') cambiarVista('subcategorias');
             else {
                 renderizarListaItems(idClic);
-                cambiarVista('lista', idClic);
+                cambiarVista('lista', true, idClic);
             }
         }
 
@@ -327,7 +309,7 @@
             }
         }
 
-        function cambiarVista(nuevaVista) {
+        function cambiarVista(nuevaVista, pushHistory = true, infoExtra = null) {
             document.getElementById('vista-principal').classList.add('hidden');
             document.getElementById('vista-subcategorias').classList.add('hidden');
             document.getElementById('vista-lista').classList.add('hidden');
@@ -336,18 +318,14 @@
             if(nuevaVista !== 'principal') document.getElementById('btn-atras').classList.remove('hidden');
             else document.getElementById('btn-atras').classList.add('hidden');
 
-            historialVistas.push(nuevaVista);
+            if(pushHistory) {
+                historialVistas.push(nuevaVista);
+                history.pushState({ view: nuevaVista, info: infoExtra }, "");
+            }
             window.scrollTo(0, 0);
         }
 
-        function goBack() {
-            historialVistas.pop(); 
-            const vistaAnterior = historialVistas.pop(); 
-            if(!vistaAnterior || vistaAnterior === 'principal') {
-                historialVistas = ['principal'];
-                cambiarVista('principal');
-            } else cambiarVista(vistaAnterior);
-        }
+        function goBack() { history.back(); }
 
         function openDetail(id) {
             const item = itemsBD.find(x => x.id === id);
@@ -358,14 +336,29 @@
             document.getElementById('detail-tags').innerHTML = item.tags.map(tag => `<span class="bg-[#2a2a2a] text-gray-300 px-3 py-1.5 rounded-md text-xs font-semibold border border-gray-700 uppercase tracking-wide">${tag}</span>`).join('');
             document.getElementById('item-detail').classList.remove('translate-y-full');
             document.body.style.overflow = 'hidden'; 
+            history.pushState({ view: 'detalle' }, "");
         }
 
-        function closeDetail() {
-            document.getElementById('item-detail').classList.add('translate-y-full');
-            document.body.style.overflow = 'auto'; 
-        }
+        function closeDetail() { history.back(); }
 
-        // Arrancar la app móvil
+        window.onpopstate = function(event) {
+            const detalleAbierto = !document.getElementById('item-detail').classList.contains('translate-y-full');
+            const state = event.state;
+
+            if (detalleAbierto) {
+                document.getElementById('item-detail').classList.add('translate-y-full');
+                document.body.style.overflow = 'auto';
+            } else {
+                if (state && state.view) {
+                    historialVistas.pop();
+                    cambiarVista(state.view, false);
+                } else {
+                    historialVistas = ['principal'];
+                    cambiarVista('principal', false);
+                }
+            }
+        };
+
         renderizarTarjetasGrandes(menuPrincipal, 'contenedor-principal');
         renderizarTarjetasGrandes(subcategoriasTaller, 'contenedor-subcategorias');
 
