@@ -10,6 +10,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
     
     <style>
+
+        /* --- ESTILOS CARRUSEL 3D --- */
+
+        .scene {
+            width: 100%; height: 400px;
+            perspective: 2000px; /* Ajustado para un 3D natural */
+            display: flex; justify-content: center; align-items: center;
+            position: relative; margin-top: 50px;
+        }
+
+        .carousel-3d {
+            width: 300px; height: 350px;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+        }
+
+        .carousel-item {
+            position: absolute;
+            width: 300px; height: 350px;
+            left: 10px; top: 10px;
+            background: var(--bg-card);
+            border: 2px solid #333;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            backface-visibility: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            cursor: pointer;
+        }
+
+        .carousel-item img { width: 100%; height: 180px; object-fit: cover; }
+        .carousel-item .info { padding: 15px; text-align: center; }
+        .carousel-item h4 { color: white; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; }
+        .carousel-item p { color: var(--primary); font-weight: bold; font-size: 1.1rem; }
+
+        .nav-btn {
+            background: rgba(255,193,7, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 15px 25px; border-radius: 50px;
+            font-weight: bold; cursor: pointer;
+            transition: all 0.3s; z-index: 100;
+        }
+        .nav-btn:hover { background: var(--primary); color: black; }
         /* VARIABLES GLOBALES */
         :root {
             --primary: #ffc107; 
@@ -127,24 +172,15 @@
         <section class="snap-section">
             <div class="container-desk">
                 <h2 class="section-title anim-title">Vehículos Disponibles 🚗</h2>
-                <div class="cars-grid">
-                    <div class="car-card-desk anim-car">
-                        <div class="car-image-desk"><img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80" alt="Berlina"></div>
-                        <div class="car-info">
-                            <span class="car-tag">Ocasión</span>
-                            <h3>Berlina Executive</h3>
-                            <p>2021 | 45.000 km | Diésel.</p>
-                        </div>
+            <div class="scene">
+                <div id="carousel-pc" class="carousel-3d">
                     </div>
-                    <div class="car-card-desk anim-car">
-                        <div class="car-image-desk"><img src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80" alt="Compacto"></div>
-                        <div class="car-info">
-                            <span class="car-tag">Km 0</span>
-                            <h3>Compacto Deportivo</h3>
-                            <p>2023 | 5.000 km | Gasolina.</p>
-                        </div>
-                    </div>
-                </div>
+            </div>
+
+            <div style="display: flex; gap: 40px; margin-top: 50px; justify-content: center;">
+                <button onclick="rotateCarousel(-1)" class="nav-btn">← ANTERIOR</button>
+                <button onclick="rotateCarousel(1)" class="nav-btn">SIGUIENTE →</button>
+            </div>
             </div>
         </section>
     </div>
@@ -260,11 +296,60 @@
             { id: 'ELECTRO', nombre: 'Electromecánica', foto: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=800&q=80' }
         ];
 
-        const itemsBD = [
-            { id: 1, categoria: 'VEHICULOS', nombre: 'Berlina Executive', precio: '24.900 €', foto: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80', descripcion: 'Vehículo en perfecto estado.', tags: ['Diésel', '45.000 km', 'Automático'] },
-            { id: 2, categoria: 'VEHICULOS', nombre: 'Compacto Deportivo', precio: '18.500 €', foto: 'https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80', descripcion: 'Etiqueta ECO.', tags: ['Gasolina', 'Híbrido', 'Manual'] },
-            { id: 3, categoria: 'MECANICA', nombre: 'Revisión Mantenimiento', precio: 'Desde 80 €', foto: 'https://images.unsplash.com/photo-1632823465306-ed411d7f6b92?auto=format&fit=crop&w=800&q=80', descripcion: 'Cambio de aceite y filtros.', tags: ['Express', 'Premium'] }
+       const itemsBD = [
+            // NUEVA FLOTA DE VEHÍCULOS
+            { id: 1, categoria: 'VEHICULOS', nombre: 'Berlina Executive', precio: '24.900 €', foto: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80', descripcion: 'Máximo confort y elegancia.', tags: ['Diésel', '2021'] },
+            { id: 2, categoria: 'VEHICULOS', nombre: 'Compacto Deportivo', precio: '18.500 €', foto: 'https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80', descripcion: 'Ágil y potente.', tags: ['Gasolina', 'ECO'] },
+            { id: 3, categoria: 'VEHICULOS', nombre: 'SUV Explorer', precio: '31.200 €', foto: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=800&q=80', descripcion: 'Para toda la familia.', tags: ['Híbrido', '4x4'] },
+            { id: 4, categoria: 'VEHICULOS', nombre: 'Luxury Coupé', precio: '45.000 €', foto: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80', descripcion: 'Estilo sin límites.', tags: ['Premium', 'Automático'] },
+            { id: 5, categoria: 'VEHICULOS', nombre: 'Pick-Up Beast', precio: '38.900 €', foto: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80', descripcion: 'Fuerza bruta.', tags: ['Diésel', 'Trabajo'] },
+            { id: 6, categoria: 'VEHICULOS', nombre: 'City Electric', precio: '21.500 €', foto: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80', descripcion: 'Sostenibilidad urbana.', tags: ['Eléctrico', 'Km 0'] },
+            
+            // SERVICIOS DE TALLER (Mantenemos el de prueba)
+            { id: 7, categoria: 'MECANICA', nombre: 'Revisión Mantenimiento', precio: 'Desde 80 €', foto: 'https://images.unsplash.com/photo-1632823465306-ed411d7f6b92?auto=format&fit=crop&w=800&q=80', descripcion: 'Cambio de aceite y filtros.', tags: ['Express', 'Premium'] }
         ];
+
+        // Variables globales para el carrusel
+        let currentRotation = 0;
+        let theta = 0;
+        let radius = 0;
+
+function setupCarousel(containerId) {
+            const container = document.getElementById(containerId);
+            if(!container) return;
+            
+            const vehiculosOriginal = itemsBD.filter(i => i.categoria === 'VEHICULOS');
+            
+            // EL TRUCO: Duplicamos la lista para formar un círculo de 12 lados en vez de 6.
+            // Al ser 12 lados, el ángulo baja a 30º y las tarjetas laterales miran mucho más de frente.
+            const vehiculos = [...vehiculosOriginal, ...vehiculosOriginal];
+            const totalItems = vehiculos.length;
+            
+            // Matemáticas para calcular el cilindro 3D perfecto
+            theta = 360 / totalItems;
+            
+            // Usamos 340 de ancho virtual para que haya un pequeño respiro entre tarjetas
+            radius = Math.round((340 / 2) / Math.tan(Math.PI / totalItems));
+            
+            container.innerHTML = vehiculos.map((v, i) => `
+                <div class="carousel-item" style="transform: rotateY(${i * theta}deg) translateZ(${radius}px)" onclick="openDetail(${v.id})">
+                    <img src="${v.foto}">
+                    <div class="info">
+                        <h4>${v.nombre}</h4>
+                        <p>${v.precio}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function rotateCarousel(direction) {
+            currentRotation += theta * direction * -1;
+            anime({
+                targets: ['.carousel-3d'],
+                rotateY: currentRotation,
+                duration: 1000,
+                easing: 'easeOutElastic(1, .8)'
+            });
+        }
 
         let historialVistas = ['principal'];
         history.replaceState({ view: 'principal' }, "");
@@ -298,20 +383,35 @@
             if(categoriaId === 'MECANICA') titulo = 'Mecánica General';
             document.getElementById('titulo-lista').innerText = titulo;
             
-            if (filtrados.length === 0) grid.innerHTML = '<p class="text-center text-gray-500 py-10 italic">Próximamente disponible</p>';
-            else {
-                grid.innerHTML = filtrados.map(item => `
-                    <div onclick="openDetail(${item.id})" class="bg-[#1a1a1a] rounded-2xl shadow-lg overflow-hidden active:scale-95 transition-transform border border-gray-800 flex flex-col">
-                        <img src="${item.foto}" loading="lazy" class="w-full h-48 object-cover">
-                        <div class="p-5 flex justify-between items-center">
-                            <div><h4 class="font-bold text-lg leading-tight uppercase">${item.nombre}</h4></div>
-                            <div class="bg-[#2a2a2a] px-3 py-2 rounded-lg border border-[#ffc107]/30"><p class="text-[#ffc107] font-bold">${item.precio}</p></div>
+            if (filtrados.length === 0) {
+                grid.innerHTML = '<p class="text-center text-gray-500 py-10 italic">Próximamente disponible</p>';
+            } else {
+                if (categoriaId === 'VEHICULOS') {
+                    // Si abre vehículos en el MÓVIL, inyectamos el HTML del carrusel 3D
+                    grid.innerHTML = `
+                        <div class="scene" style="margin-top: 10px;">
+                            <div id="carousel-mobile" class="carousel-3d"></div>
                         </div>
-                    </div>
-                `).join('');
+                        <div class="flex justify-center gap-6 mt-10">
+                            <button onclick="rotateCarousel(-1)" class="nav-btn text-xs">←</button>
+                            <button onclick="rotateCarousel(1)" class="nav-btn text-xs">→</button>
+                        </div>`;
+                    // Inicializamos el carrusel del móvil
+                    setupCarousel('carousel-mobile');
+                } else {
+                    // Si abre Taller en el móvil, usamos la lista clásica hacia abajo
+                    grid.innerHTML = filtrados.map(item => `
+                        <div onclick="openDetail(${item.id})" class="bg-[#1a1a1a] rounded-2xl shadow-lg overflow-hidden active:scale-95 transition-transform border border-gray-800 flex flex-col">
+                            <img src="${item.foto}" loading="lazy" class="w-full h-48 object-cover">
+                            <div class="p-5 flex justify-between items-center">
+                                <div><h4 class="font-bold text-lg leading-tight uppercase">${item.nombre}</h4></div>
+                                <div class="bg-[#2a2a2a] px-3 py-2 rounded-lg border border-[#ffc107]/30"><p class="text-[#ffc107] font-bold">${item.precio}</p></div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
             }
         }
-
         function cambiarVista(nuevaVista, pushHistory = true, infoExtra = null) {
             document.getElementById('vista-principal').classList.add('hidden');
             document.getElementById('vista-subcategorias').classList.add('hidden');
@@ -364,7 +464,7 @@
 
         renderizarTarjetasGrandes(menuPrincipal, 'contenedor-principal');
         renderizarTarjetasGrandes(subcategoriasTaller, 'contenedor-subcategorias');
-
+        setupCarousel('carousel-pc');
     </script>
 </body>
 </html>
